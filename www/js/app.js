@@ -1,5 +1,5 @@
 const decksElement = document.querySelector("#decksElement");
-const concatSummary = document.querySelector("#concat-summary");
+const concatSummaryElement = document.querySelector("#concat-summary");
 
 const readFileAsText = (file) => {
   return new Promise((resolve, reject) => {
@@ -59,6 +59,57 @@ const exportDeckString = (cardsSummary) => {
   return deckList;
 };
 
+const concatSummary = (files, summary) => {
+  const deckNames = [];
+  for (let file of files) deckNames.push(file.name);
+  return {
+    decks: { total: files.length, names: deckNames },
+    uniqueCards: Object.keys(summary).length,
+  };
+};
+
+const dce = ({ el, inner }) => {
+  const element = document.createElement(el);
+  if (inner) element.innerText = inner;
+  return element;
+};
+
+const eac = ({ el, arr }) => arr.forEach((a) => el.classList.add(a));
+
+const createSummaryEl = (summaryData) => {
+  const { decks, uniqueCards } = summaryData;
+  const { total, names } = decks;
+  const summary = dce({ el: "div" });
+  eac({ el: summary, arr: ["d-flex"] });
+
+  const ulInfo = dce({ el: "ul" });
+  const ulDecks = dce({ el: "ul" });
+
+  [ulInfo, ulDecks].forEach((el) => {
+    eac({ el, arr: ["pa-0", "pr-3", "ma-0"] });
+    el.style = "list-style:none;";
+  });
+
+  const ulInfo_title = dce({ el: "li", inner: "Analyzed decks:" });
+
+  ulInfo.appendChild(ulInfo_title);
+
+  for (let deck of names) {
+    const t1 = deck.replace("Deck -", "").replace(".txt", "");
+    const li = dce({ el: "li", inner: t1.trim() });
+    ulInfo.appendChild(li);
+  }
+
+  const ulDecks_title = dce({ el: "li", inner: "Decks Info:" });
+  ulDecks.appendChild(ulDecks_title);
+  ulDecks.appendChild(dce({ el: "li", inner: `Total Decks: ${total}` }));
+  ulDecks.appendChild(dce({ el: "li", inner: `Unique cards: ${uniqueCards}` }));
+
+  summary.appendChild(ulDecks);
+  summary.appendChild(ulInfo);
+  return summary;
+};
+
 decksElement.addEventListener("change", async () => {
   const { files } = decksElement;
   const readers = [];
@@ -67,9 +118,11 @@ decksElement.addEventListener("change", async () => {
   for (let deck of files) readers.push(readFileAsText(deck));
 
   const promises = await Promise.all(readers);
-
   const cardsSummary = summarizeDecks(promises);
-
   const deckList = exportDeckString(cardsSummary);
-  console.log(deckList);
+  const concatSum = concatSummary(files, cardsSummary);
+  const summaryEl = createSummaryEl(concatSum);
+  concatSummaryElement.appendChild(summaryEl);
+
+  console.log(deckList, concatSum);
 });
