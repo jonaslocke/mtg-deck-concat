@@ -1,3 +1,4 @@
+$element-positions: "all", "top", "right", "bottom", "left";
 @for $i from 0 through 20 {
   .br-#{$i} {
     border-radius: spacing($i) !important;
@@ -97,6 +98,20 @@
   .lh-#{$i} {
     line-height: spacing($i) !important;
   }
+
+  @each $position in $element-positions {
+    @if $position != "all" {
+      @if $i == 0 {
+        .pos-#{$position}-#{$i} {
+          #{$position}: 0;
+        }
+      } @else {
+        .pos-#{$position}-#{$i} {
+          #{$position}: spacing($i);
+        }
+      }
+    }
+  }
 }
 @for $i from 0 through 100 {
   .wp-#{$i} {
@@ -167,7 +182,6 @@ $text-transform: none, capitalize, uppercase, lowercase, full-width,
 
 $colors-name: "white", "black", "primary", "secondary", "tertiary", "quaternary";
 $colors-values: #ffffff, #000000, #06d6a0, #ffd166, #ef476f, #118ab2;
-$element-positions: "all", "top", "right", "bottom", "left";
 
 @for $i from 1 through length($colors-name) {
   .text-#{nth($colors-name, $i)} {
@@ -204,7 +218,7 @@ $element-positions: "all", "top", "right", "bottom", "left";
 }
 
 $display-types: block, inline, inline-block, flex, inline-flex, grid,
-  inline-grid, flow-root;
+  inline-grid, flow-root, none;
 
 @each $type in $display-types {
   .d-#{$type} {

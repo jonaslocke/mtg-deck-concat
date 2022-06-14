@@ -1,5 +1,7 @@
 const decksElement = document.querySelector("#decksElement");
 const concatSummaryElement = document.querySelector("#concat-summary");
+const uniqueCardsElement = document.querySelector("#unique-cards");
+const resetConcat = document.querySelector("#reset");
 
 const readFileAsText = (file) => {
   return new Promise((resolve, reject) => {
@@ -31,13 +33,13 @@ const convertDeckTextToArray = (promises) => {
       }
     }
   }
-  return cards;
+  return cards.sort((a, b) => b.count - a.count);
 };
 
 const summarizeDecks = (promises) => {
   const cards = convertDeckTextToArray(promises);
 
-  return cards.reduce((acc, cur) => {
+  const result = cards.reduce((acc, cur) => {
     const { name } = cur;
     const count = Number.parseInt(cur.count);
     acc[name] = !acc[name]
@@ -48,6 +50,8 @@ const summarizeDecks = (promises) => {
         };
     return acc;
   }, {});
+
+  return result;
 };
 
 const exportDeckString = (cardsSummary) => {
@@ -110,6 +114,22 @@ const createSummaryEl = (summaryData) => {
   return summary;
 };
 
+const createUniqueCards = (deckList) => {
+  deckList = deckList.split("\n");
+  console.log(deckList);
+  const ul = dce({ el: "ul" });
+  deckList.forEach((card) => {
+    const el = dce({ el: "li", inner: card.trim() });
+    eac({ el, arr: ["fz-3", "pxy-0-1"] });
+    ul.appendChild(el);
+  });
+
+  ul.style = "list-style:none; column-count: 4;";
+  eac({ el: ul, arr: ["pa-0", "ma-0"] });
+
+  return ul;
+};
+
 decksElement.addEventListener("change", async () => {
   const { files } = decksElement;
   const readers = [];
@@ -124,5 +144,18 @@ decksElement.addEventListener("change", async () => {
   const summaryEl = createSummaryEl(concatSum);
   concatSummaryElement.appendChild(summaryEl);
 
-  console.log(deckList, concatSum);
+  // console.log(deckList, concatSum);
+
+  const uniqueCardsEl = createUniqueCards(deckList);
+  uniqueCardsElement.appendChild(uniqueCardsEl);
+
+  decksElement.disabled = true;
+  showResetButton();
 });
+
+const showResetButton = () => {
+  resetConcat.classList.remove("d-none");
+  resetConcat.classList.add("d-flex");
+};
+
+resetConcat.addEventListener("click", () => location.reload());
