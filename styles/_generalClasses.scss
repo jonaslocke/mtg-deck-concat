@@ -1,0 +1,242 @@
+@for $i from 0 through 20 {
+  .br-#{$i} {
+    border-radius: spacing($i) !important;
+  }
+
+  .ls-#{$i} {
+    @if $i == 0 {
+      letter-spacing: normal !important;
+    } @else {
+      letter-spacing: #{$i/10}px !important;
+    }
+  }
+
+  .fz-#{$i} {
+    @if $i != 0 {
+      font-size: spacing($i) !important;
+    }
+  }
+
+  .pr-#{$i} {
+    padding-right: spacing($i) !important;
+  }
+  .pl-#{$i} {
+    padding-left: spacing($i) !important;
+  }
+  .pt-#{$i} {
+    padding-top: spacing($i) !important;
+  }
+  .pb-#{$i} {
+    padding-bottom: spacing($i) !important;
+  }
+  .pa-#{$i} {
+    padding: spacing($i) !important;
+  }
+  .py-#{$i} {
+    padding: spacing($i) 0 !important;
+  }
+  .px-#{$i} {
+    padding: 0 spacing($i) !important;
+  }
+
+  .ml-#{$i} {
+    margin-left: spacing($i) !important;
+  }
+  .mr-#{$i} {
+    margin-right: spacing($i) !important;
+  }
+  .mt-#{$i} {
+    margin-top: spacing($i) !important;
+  }
+  .mb-#{$i} {
+    margin-bottom: spacing($i) !important;
+  }
+  .ma-#{$i} {
+    margin: spacing($i) !important;
+  }
+  .my-#{$i} {
+    margin: spacing($i) 0 !important;
+  }
+  .mx-#{$i} {
+    margin: 0 spacing($i) !important;
+  }
+
+  @for $f from 0 through 20 {
+    .mxy-#{$i}-#{$f} {
+      margin: spacing($f) spacing($i) !important;
+    }
+    .pxy-#{$i}-#{$f} {
+      padding: spacing($f) spacing($i) !important;
+    }
+  }
+
+  .w-#{$i} {
+    @if $i == 0 {
+      width: auto !important;
+    } @else {
+      width: spacing($i) !important;
+    }
+  }
+  .h-#{$i} {
+    @if $i == 0 {
+      height: auto !important;
+    } @else {
+      height: spacing($i) !important;
+    }
+  }
+  .wh-#{$i} {
+    @if $i == 0 {
+      width: auto !important;
+      height: auto !important;
+    } @else {
+      width: spacing($i) !important;
+      height: spacing($i) !important;
+    }
+  }
+
+  .lh-#{$i} {
+    line-height: spacing($i) !important;
+  }
+}
+@for $i from 0 through 100 {
+  .wp-#{$i} {
+    width: #{$i * 1%};
+  }
+  .hp-#{$i} {
+    height: #{$i * 1%};
+  }
+}
+
+$font-classes: "h1", "h2", "h3", "h4", "subtitle-1", "subtitle-2", "body-1",
+  "body-2", "button", "caption", "overline";
+$font-classes-size: spacing(11), spacing(5), spacing(4), spacing(3), spacing(4),
+  spacing(3), spacing(4), spacing(3), spacing(4), spacing(3), spacing(3);
+$font-classes-weight: 400, 400, 400, 400, 500, 500, 400, 400, 400, 300, 400;
+$font-classes-color: rgba(255, 255, 255, 1), rgba(255, 255, 255, 1),
+  rgba(255, 255, 255, 1), rgba(255, 255, 255, 1), rgba(255, 255, 255, 0.49),
+  rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 1), rgba(255, 255, 255, 1),
+  rgba(255, 255, 255, 1), rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 1);
+$font-classes-text-transform: none, none, none, none, none, none, none, none,
+  uppercase, none, uppercase;
+$font-classes-letter-spacing: normal, normal, normal, normal, normal, normal,
+  normal, normal, 0.0892857143em, normal, 0.1666666667em;
+
+$font-classes-family: "Russo One", "Russo One", "Russo One", "Russo One",
+  "Open Sans", "Open Sans", "Open Sans", "Open Sans", "Open Sans", "Open Sans",
+  "Open Sans";
+
+@for $i from 1 through length($font-classes) {
+  .font-#{nth($font-classes, $i)} {
+    font-size: nth($font-classes-size, $i) !important;
+    font-weight: nth($font-classes-weight, $i) !important;
+    color: nth($font-classes-color, $i) !important;
+    text-transform: nth($font-classes-text-transform, $i) !important;
+    letter-spacing: nth($font-classes-letter-spacing, $i);
+    font-family: nth($font-classes-family, $i), sans-serif !important;
+  }
+}
+
+$flex-positions: start, end, center, space-between, space-around;
+
+.d-flex {
+  display: flex !important;
+}
+
+@each $position in $flex-positions {
+  .justify-#{$position} {
+    justify-content: $position;
+  }
+  .align-#{$position} {
+    align-items: $position;
+  }
+}
+$text-transform: none, capitalize, uppercase, lowercase, full-width,
+  full-size-kana;
+
+@each $transform in $text-transform {
+  .text-transform-#{$transform} {
+    text-transform: $transform !important;
+  }
+}
+
+@for $i from 1 through 9 {
+  .font-weight-#{$i * 100} {
+    font-weight: #{$i * 100} !important;
+  }
+}
+
+$colors-name: "white", "black", "primary", "secondary", "tertiary", "quaternary";
+$colors-values: #ffffff, #000000, #06d6a0, #ffd166, #ef476f, #118ab2;
+$element-positions: "top", "right", "bottom", "left";
+
+@for $i from 1 through length($colors-name) {
+  .text-#{nth($colors-name, $i)} {
+    color: nth($colors-values, $i) !important;
+  }
+
+  .background-#{nth($colors-name, $i)} {
+    background-color: nth($colors-values, $i) !important;
+  }
+
+  @for $j from 1 through 10 {
+    .background-tint-#{nth($colors-name, $i)}-#{$j} {
+      background-color: rgba(
+        $color: nth($colors-values, $i),
+        $alpha: calc(#{$j} * 10 / 100)
+      ) !important;
+    }
+  }
+
+  @for $j from 1 through 5 {
+    @each $position in $element-positions {
+      .bd-#{$j}-#{$position}-#{nth($colors-name, $i)} {
+        border: 0;
+        border-#{$position}: #{$j}px solid nth($colors-values, $i) !important;
+      }
+    }
+  }
+}
+
+$display-types: block, inline, inline-block, flex, inline-flex, grid,
+  inline-grid, flow-root;
+
+@each $type in $display-types {
+  .d-#{$type} {
+    display: $type;
+  }
+}
+
+$text-align-positions: start, end, left, right, center, justify, justify-all,
+  match-parent;
+
+@each $position in $text-align-positions {
+  .text-align-#{$position} {
+    text-align: $position !important;
+  }
+}
+
+$cursors: auto, default, none, context-menu, help, pointer, progress, wait, cell,
+  crosshair, text, vertical-text, alias, copy, move, no-drop, not-allowed, grab,
+  grabbing, all-scroll, col-resize, row-resize, n-resize, e-resize, s-resize,
+  w-resize, ne-resize, nw-resize, se-resize, sw-resize, ew-resize, ns-resize,
+  nesw-resize, nwse-resize, zoom-in, zoom-out;
+
+@each $cursor in $cursors {
+  .cursor-#{$cursor} {
+    cursor: $cursor;
+  }
+}
+
+@for $i from 0 through 12 {
+  .grid-columns-#{$i} {
+    grid-template-columns: repeat($i, 1fr);
+  }
+}
+
+$element-screen-positions: static, relative, absolute, fixed, stick;
+
+@each $position in $element-screen-positions {
+  .position-#{$position} {
+    position: $position;
+  }
+}
