@@ -167,7 +167,7 @@ $text-transform: none, capitalize, uppercase, lowercase, full-width,
 
 $colors-name: "white", "black", "primary", "secondary", "tertiary", "quaternary";
 $colors-values: #ffffff, #000000, #06d6a0, #ffd166, #ef476f, #118ab2;
-$element-positions: "top", "right", "bottom", "left";
+$element-positions: "all", "top", "right", "bottom", "left";
 
 @for $i from 1 through length($colors-name) {
   .text-#{nth($colors-name, $i)} {
@@ -189,9 +189,15 @@ $element-positions: "top", "right", "bottom", "left";
 
   @for $j from 1 through 5 {
     @each $position in $element-positions {
-      .bd-#{$j}-#{$position}-#{nth($colors-name, $i)} {
-        border: 0;
-        border-#{$position}: #{$j}px solid nth($colors-values, $i) !important;
+      @if $position == "all" {
+        .bd-#{$j}-#{$position}-#{nth($colors-name, $i)} {
+          border: #{$j}px solid nth($colors-values, $i) !important;
+        }
+      } @else {
+        .bd-#{$j}-#{$position}-#{nth($colors-name, $i)} {
+          border: 0;
+          border-#{$position}: #{$j}px solid nth($colors-values, $i) !important;
+        }
       }
     }
   }

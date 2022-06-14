@@ -1,4 +1,5 @@
 const decksElement = document.querySelector("#decksElement");
+const concatSummary = document.querySelector("#concat-summary");
 
 const readFileAsText = (file) => {
   return new Promise((resolve, reject) => {
@@ -16,15 +17,7 @@ const readFileAsText = (file) => {
   });
 };
 
-decksElement.addEventListener("change", async () => {
-  const { files } = decksElement;
-  const readers = [];
-  if (!files.length) return;
-
-  for (let deck of files) readers.push(readFileAsText(deck));
-
-  const promises = await Promise.all(readers);
-
+const convertDeckTextToArray = (promises) => {
   const cards = [];
   for (let promise of promises) {
     const lines = promise.split("\n");
@@ -38,7 +31,13 @@ decksElement.addEventListener("change", async () => {
       }
     }
   }
-  const cardsSummary = cards.reduce((acc, cur) => {
+  return cards;
+};
+
+const summarizeDecks = (promises) => {
+  const cards = convertDeckTextToArray(promises);
+
+  return cards.reduce((acc, cur) => {
     const { name } = cur;
     const count = Number.parseInt(cur.count);
     acc[name] = !acc[name]
@@ -49,11 +48,28 @@ decksElement.addEventListener("change", async () => {
         };
     return acc;
   }, {});
+};
 
-  deckList = "";
+const exportDeckString = (cardsSummary) => {
+  let deckList = "";
   for (let card in cardsSummary) {
     const { max } = cardsSummary[card];
     deckList += `${max} ${card} \n`;
   }
+  return deckList;
+};
+
+decksElement.addEventListener("change", async () => {
+  const { files } = decksElement;
+  const readers = [];
+  if (!files.length) return;
+
+  for (let deck of files) readers.push(readFileAsText(deck));
+
+  const promises = await Promise.all(readers);
+
+  const cardsSummary = summarizeDecks(promises);
+
+  const deckList = exportDeckString(cardsSummary);
   console.log(deckList);
 });

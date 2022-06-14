@@ -4,4 +4,8 @@ body {
   font-family: "Open Sans", sans-serif;
 }
 
+@function spacing($number) {
+  @return $number * 4px;
+}
+
 @import "generalClasses";
