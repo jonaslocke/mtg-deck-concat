@@ -8,4 +8,36 @@ body {
   @return $number * 4px;
 }
 
+.deck-vis {
+  display: none;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  column-count: 4;
+  &.active {
+    display: block;
+  }
+}
+
+.deck-vis-selector {
+  padding: 8px 0;
+  margin: 0;
+  list-style: none;
+  display: flex;
+  gap: 8px;
+  li {
+    padding: 4px 12px;
+    font-size: 12px;
+    background-color: #444;
+    color: #fff;
+    border-radius: 8px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: pointer;
+    &.active {
+      background-color: #000;
+    }
+  }
+}
+
 @import "generalClasses";

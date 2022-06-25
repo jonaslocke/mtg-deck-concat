@@ -3,6 +3,8 @@ const concatSummaryElement = document.querySelector("#concat-summary");
 const uniqueCardsElement = document.querySelector("#unique-cards");
 const resetConcat = document.querySelector("#reset");
 
+let decksToVisualization = 0;
+
 const readFileAsText = (file) => {
   return new Promise((resolve, reject) => {
     const fr = new FileReader();
@@ -54,11 +56,11 @@ const summarizeDecks = (promises) => {
   return result;
 };
 
-const exportDeckString = (cardsSummary) => {
+const exportDeckString = (cards, prop = "max") => {
   let deckList = "";
-  for (let card in cardsSummary) {
-    const { max } = cardsSummary[card];
-    deckList += `${max} ${card} \n`;
+  for (let card in cards) {
+    const value = cards[card][prop];
+    deckList += `${value} ${card} \n`;
   }
   return deckList;
 };
@@ -114,19 +116,47 @@ const createSummaryEl = (summaryData) => {
   return summary;
 };
 
-const createUniqueCards = (deckList) => {
+const createDeckVisualization = (deckList) => {
+  decksToVisualization++;
   deckList = deckList.split("\n");
-  console.log(deckList);
   const ul = dce({ el: "ul" });
+  ul.setAttribute("id", `deck-vis-${decksToVisualization}`);
+  eac({ el: ul, arr: ["deck-vis"] });
   deckList.forEach((card) => {
     const el = dce({ el: "li", inner: card.trim() });
     eac({ el, arr: ["fz-3", "pxy-0-1"] });
     ul.appendChild(el);
   });
 
-  ul.style = "list-style:none; column-count: 4;";
-  eac({ el: ul, arr: ["pa-0", "ma-0"] });
+  return ul;
+};
+const changeDeckVisualization = (index = 0) => {
+  const parents = [
+    document.querySelectorAll(".deck-vis"),
+    document.querySelectorAll(".deck-vis-selector li"),
+  ];
 
+  const targets = [
+    document.querySelectorAll(".deck-vis")[index],
+    document.querySelectorAll(".deck-vis-selector li")[index],
+  ];
+
+  parents.forEach((element) =>
+    element.forEach((vis) => vis.classList.remove("active"))
+  );
+
+  targets.forEach((target) => target.classList.add("active"));
+};
+
+const createVisualizationSelector = (arr) => {
+  const ul = dce({ el: "ul" });
+  eac({ el: ul, arr: ["deck-vis-selector"] });
+  for (let index = 0; index < decksToVisualization; index++) {
+    const li = dce({ el: "li", inner: arr[index] });
+    if (index === 0) eac({ el: li, arr: ["active"] });
+    li.addEventListener("click", () => changeDeckVisualization(index));
+    ul.appendChild(li);
+  }
   return ul;
 };
 
@@ -139,15 +169,22 @@ decksElement.addEventListener("change", async () => {
 
   const promises = await Promise.all(readers);
   const cardsSummary = summarizeDecks(promises);
-  const deckList = exportDeckString(cardsSummary);
+  const uniqueDeckList = exportDeckString(cardsSummary);
+  const totalDeckList = exportDeckString(cardsSummary, "count");
   const concatSum = concatSummary(files, cardsSummary);
   const summaryEl = createSummaryEl(concatSum);
   concatSummaryElement.appendChild(summaryEl);
 
-  // console.log(deckList, concatSum);
-
-  const uniqueCardsEl = createUniqueCards(deckList);
-  uniqueCardsElement.appendChild(uniqueCardsEl);
+  const uniqueCardsEl = createDeckVisualization(uniqueDeckList);
+  const totalCardsEl = createDeckVisualization(totalDeckList);
+  const deckVisualizations = [uniqueCardsEl, totalCardsEl];
+  const visualizationSelectors = createVisualizationSelector([
+    "unique",
+    "total",
+  ]);
+  uniqueCardsElement.appendChild(visualizationSelectors);
+  deckVisualizations.forEach((vis) => uniqueCardsElement.appendChild(vis));
+  changeDeckVisualization();
 
   decksElement.disabled = true;
   showResetButton();
